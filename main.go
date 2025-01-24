@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 	"github.com/glebarez/sqlite"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -47,6 +47,7 @@ func main() {
 
 	// 4. Роутинг
 	r.POST("/register", registerHandler(db))
+	r.POST("/login", loginHandler(db))
 	r.GET("/health", healthCheck)
 
 	fmt.Println("🌐 Server running on :8080")
@@ -83,7 +84,14 @@ func registerHandler(db *gorm.DB) gin.HandlerFunc {
 
 func loginHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		var user User
+
+		if err := c.ShouldBindJSON(&user); err != nil {
+			print("Ошибка")
+		}
+
+		c.JSON(http.StatusOK, user)
+
 	}
 }
 
